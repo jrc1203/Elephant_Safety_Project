@@ -1,0 +1,160 @@
+#include <Servo.h>
+
+// Pin declarations
+#define pizzo1 A0
+#define pizzo2 A1
+#define pizzo3 A2
+#define pizzo4 A3
+#define pizzo5 A4
+#define pizzo6 A5
+
+#define green1 2
+#define green2 3
+#define red1 4
+#define red2 5
+#define yellow1 6
+#define yellow2 7
+
+#define trigPin1 8
+#define echoPin1 9
+#define trigPin2 10
+#define echoPin2 11
+
+Servo myServo;  // Servo motor object
+
+// Variables to store sensor readings
+int pizzoThreshold = 200;  // Threshold value for piezo sensors
+long distance1, distance2;
+int stressDetected = 0;  // Flag for piezo sensor stress detection
+
+void setup() {
+  Serial.begin(9600); // Initialize serial communication for debugging
+
+  // Set pin modes for piezo sensors
+  pinMode(pizzo1, INPUT);
+  pinMode(pizzo2, INPUT);
+  pinMode(pizzo3, INPUT);
+  pinMode(pizzo4, INPUT);
+  pinMode(pizzo5, INPUT);
+  pinMode(pizzo6, INPUT);
+
+  // Set pin modes for LEDs
+  pinMode(green1, OUTPUT);
+  pinMode(green2, OUTPUT);
+  pinMode(red1, OUTPUT);
+  pinMode(red2, OUTPUT);
+  pinMode(yellow1, OUTPUT);
+  pinMode(yellow2, OUTPUT);
+
+  // Set pin modes for ultrasonic sensors
+  pinMode(trigPin1, OUTPUT);
+  pinMode(echoPin1, INPUT);
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
+
+  myServo.attach(12);  // Attach the servo to pin 12
+  myServo.write(0);  // Set servo to 0 degrees at the start
+ 
+  // Initial LED states
+  digitalWrite(green1, HIGH);
+  digitalWrite(green2, HIGH);
+  digitalWrite(yellow1, LOW);
+  digitalWrite(yellow2, LOW);
+  digitalWrite(red1, LOW);
+  digitalWrite(red2, LOW);
+}
+
+void loop() {
+
+  // Read ultrasonic sensor distances
+  distance1 = getDistance(trigPin1, echoPin1);
+  distance2 = getDistance(trigPin2, echoPin2);
+
+  Serial.print("Distance1: ");
+  Serial.println(distance1);
+  Serial.print("Distance2: ");
+  Serial.println(distance2);
+
+  stressDetected = checkPiezoSensors();
+  if ((distance1 < 20 || distance2 < 20) && stressDetected)  {
+    
+      
+      
+      
+    digitalWrite(green1, LOW);
+    digitalWrite(red1, HIGH);
+    digitalWrite(yellow1, LOW);
+    digitalWrite(red2, LOW);
+    digitalWrite(green2, LOW);
+    digitalWrite(yellow2, HIGH);
+     myServo.write(90);
+     
+     delay(5000);
+     
+  // If any ultrasonic sensor detects object within 20 cm
+  
+    // Check piezo sensors for stress
+    } 
+    
+  else {
+
+    // If no object is near, reset to green LEDs
+   /* long a=millis();
+    delay(2000);
+    long b=millis();
+    int duration=(b-a)/1000;
+    */
+    Serial.println("No object detected.");
+    digitalWrite(green1, HIGH);
+    digitalWrite(green2, HIGH);
+    digitalWrite(red1, LOW);
+    digitalWrite(red2, LOW);
+    digitalWrite(yellow1, LOW);
+    digitalWrite(yellow2, LOW);
+    myServo.write(0);  // Reset servo to 0 degrees
+  }
+
+  delay(1000); // Short delay between loop iterations
+}
+
+// Function to read distance from ultrasonic sensor
+long getDistance(int trigPin, int echoPin) {
+  long duration, distance;
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration / 2) / 29.1;  // Convert duration to cm
+  return distance;
+}
+
+// Function to check stress on piezo sensors
+int checkPiezoSensors() {
+  int piezoValue1 = analogRead(pizzo1);
+  int piezoValue2 = analogRead(pizzo2);
+  int piezoValue3 = analogRead(pizzo3);
+  int piezoValue4 = analogRead(pizzo4);
+  int piezoValue5 = analogRead(pizzo5);
+  int piezoValue6 = analogRead(pizzo6);
+
+  // Print piezo sensor readings for debugging
+  Serial.print("Piezo values: ");
+  Serial.print(piezoValue1); Serial.print(" ");
+  Serial.print(piezoValue2); Serial.print(" ");
+  Serial.print(piezoValue3); Serial.print(" ");
+  Serial.print(piezoValue4); Serial.print(" ");
+  Serial.print(piezoValue5); Serial.print(" ");
+  Serial.print(piezoValue6); Serial.println();
+
+  // Check if any piezo sensor exceeds the threshold
+  if (piezoValue1 > pizzoThreshold || piezoValue2 > pizzoThreshold ||
+      piezoValue3 > pizzoThreshold || piezoValue4 > pizzoThreshold ||
+      piezoValue5 > pizzoThreshold || piezoValue6 > pizzoThreshold) {
+    return 1;  // Stress detected
+  } else {
+    return 0;  // No stress detected
+  }
+  
+}

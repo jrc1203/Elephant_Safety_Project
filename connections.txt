@@ -1,0 +1,25 @@
+Connection steps of Elephant safety project
+Arduino 5V pin to Breadboard +
+Arduino GND Pin to Breadboard -
+"+" Pin of All Ceramic Analog pizzoSensor to Arduino 5v or breadboard +
+"-" Pin of All Ceramic Analog pizzoSensor to Arduino GND or breadboard -
+"S" Pin of First Ceramic Analog Pizzo sensor to Arduino A0 pin
+"S" Pin of Second Ceramic Analog Pizzo sensor to Arduino A1 pin
+"S" Pin of Third Ceramic Analog Pizzo sensor to Arduino A2 Pin
+"S" Pin of Fourth Ceramic Analog Pizzo sensor to Arduino A3 pin
+"S" Pin of Fifth Ceramic Analog Pizzo sensor to Arduino A4 pin
+"S" Pin of Sixth Ceramic Analog Pizzo sensor to Arduino A5 pin
+Red Wire of Servo MG90 to Arduino 5v or Breadboard +
+Brown Wire of Servo MG90 to Arduino GND ort Breadboard -
+Orange Wire of Servo MG90 to Arduino pin 12  
+GND pin off both Traffic Signal Module to Arduino GND or Breadboard -
+"R" Pin of first Traffic module to Arduino Pin No 4
+"R" Pin of Second Traffic module to Arduino Pin No 5
+"G" Pin of first Traffic module to Arduino Pin No 2
+"G" Pin of Second Traffic module to Arduino Pin No 3
+"Y" Pin of first Traffic module to Arduino Pin No 6
+"Y" Pin of Second Traffic module to Arduino Pin No 7
+VCC PIN OF BOTH USD SENSOR(HCSR04) TO ARDUINO 5V
+GND PIN OF BOTH USD SENSOR(HCSR04) TO ARDUINO GND
+Trig and Echo Pin of First USD Sensor(HCSR04) to Arduino Pin No. 8 & 9
+Trig and Echo Pin of Second USD Sensor(HCSR04) to Arduino Pin No. 10 & 11
